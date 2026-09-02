@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Agentic Workflows &amp; GitHub</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="practice_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practice_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="practice_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="practice_files/libs/quarto-html/popper.min.js"></script>
+<script src="practice_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practice_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practice_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practice_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practice_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practice_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practice_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#practice-1-github-desktop" id="toc-practice-1-github-desktop" class="nav-link active" data-scroll-target="#practice-1-github-desktop">Practice 1: GitHub Desktop</a>
+  <ul class="collapse">
+  <li><a href="#checkpoint-your-solo-loop-from-hw1" id="toc-checkpoint-your-solo-loop-from-hw1" class="nav-link" data-scroll-target="#checkpoint-your-solo-loop-from-hw1">Checkpoint: your solo loop from HW1</a></li>
+  <li><a href="#commit-to-your-partners-repo" id="toc-commit-to-your-partners-repo" class="nav-link" data-scroll-target="#commit-to-your-partners-repo">Commit to your partner’s repo</a></li>
+  </ul></li>
+  <li><a href="#practice-2-your-first-agentic-project" id="toc-practice-2-your-first-agentic-project" class="nav-link" data-scroll-target="#practice-2-your-first-agentic-project">Practice 2: Your first agentic project</a>
+  <ul class="collapse">
+  <li><a href="#extra-publish-with-github-pages" id="toc-extra-publish-with-github-pages" class="nav-link" data-scroll-target="#extra-publish-with-github-pages">Extra: publish with GitHub Pages</a></li>
+  </ul></li>
+  <li><a href="#practice-3-modes-slash-commands" id="toc-practice-3-modes-slash-commands" class="nav-link" data-scroll-target="#practice-3-modes-slash-commands">Practice 3: Modes &amp; slash commands</a></li>
+  <li><a href="#practice-4-skills" id="toc-practice-4-skills" class="nav-link" data-scroll-target="#practice-4-skills">Practice 4: Skills</a></li>
+  <li><a href="#practice-5-which-airline-should-you-avoid" id="toc-practice-5-which-airline-should-you-avoid" class="nav-link" data-scroll-target="#practice-5-which-airline-should-you-avoid">Practice 5: Which airline should you avoid?</a>
+  <ul class="collapse">
+  <li><a href="#now-interrogate-it" id="toc-now-interrogate-it" class="nav-link" data-scroll-target="#now-interrogate-it">Now interrogate it</a></li>
+  <li><a href="#fix-it" id="toc-fix-it" class="nav-link" data-scroll-target="#fix-it">Fix it</a></li>
+  </ul></li>
+  <li><a href="#verification-checklist" id="toc-verification-checklist" class="nav-link" data-scroll-target="#verification-checklist">Verification checklist</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Agentic Workflows &amp; GitHub</h1>
+<p class="subtitle lead">EMSE 4572/6572: Exploratory Data Analysis</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="practice-1-github-desktop" class="level1">
+<h1>Practice 1: GitHub Desktop</h1>
+<section id="checkpoint-your-solo-loop-from-hw1" class="level2">
+<h2 class="anchored" data-anchor-id="checkpoint-your-solo-loop-from-hw1">Checkpoint: your solo loop from HW1</h2>
+<p>Confirm that:</p>
+<ul>
+<li>Your <code>eda-practice</code> repo shows up in <strong>GitHub Desktop</strong></li>
+<li>The same repo exists on <strong>GitHub.com</strong></li>
+</ul>
+<p>If any of these fail, flag it now. The steps are in <a href="https://eda.seas.gwu.edu/2026-Fall/hw/1-agentic-workflows-and-github.html">HW1</a>.</p>
+</section>
+<section id="commit-to-your-partners-repo" class="level2">
+<h2 class="anchored" data-anchor-id="commit-to-your-partners-repo">Commit to your partner’s repo</h2>
+<p>Pair up with a neighbor and work through the collaboration loop. You’ll both push straight to the <code>main</code>branch.</p>
+<ol type="1">
+<li>In <em>your</em> <code>eda-practice</code> repo on GitHub.com: <strong>Settings › Collaborators</strong> → add your partner’s GitHub username → they accept the emailed invite</li>
+<li>Swap repo links. In GitHub Desktop: <strong>File › Clone Repository</strong> → clone <em>your partner’s</em> repo</li>
+<li>Edit their <code>README.md</code> in Positron → <strong>Commit</strong> to <code>main</code> → <strong>Push</strong></li>
+<li>Back in <em>your own</em> repo, click <strong>Fetch origin</strong>, then <strong>Pull</strong></li>
+<li>Open <code>README.md</code> — your partner’s edit should be there</li>
+</ol>
+<p>Write down the URL of your partner’s repo, and what you changed in it:</p>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+<p>Look at your repo’s <strong>History</strong> in GitHub Desktop. How can you tell which commit was your partner’s, and what it changed?</p>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+</section>
+</section>
+<section id="practice-2-your-first-agentic-project" class="level1">
+<h1>Practice 2: Your first agentic project</h1>
+<p>Direct an agent to build a multi-page Quarto website about <strong>someone you admire</strong> — a scientist, athlete, artist, whoever.</p>
+<ol type="1">
+<li>In GitHub Desktop, make a new repo called <code>my-website</code> (include a <code>README</code> file). Make it <strong>public</strong>, and publish it to GitHub.</li>
+<li>In Positron: <strong>File › Open Folder…</strong> and pick that repo’s folder.</li>
+<li>In the terminal pane, type <code>claude</code> and press Enter.</li>
+<li>Prompt Claude for a multi-page <strong>Quarto website</strong> about your person.</li>
+<li>When it’s done, ask it to render the site (if it didn’t already).</li>
+<li>Open <code>index.html</code> in the <code>_site</code> folder.</li>
+<li><strong>Commit + push</strong> to GitHub.</li>
+</ol>
+<section id="extra-publish-with-github-pages" class="level2">
+<h2 class="anchored" data-anchor-id="extra-publish-with-github-pages">Extra: publish with GitHub Pages</h2>
+<ol type="1">
+<li>Ask Claude to change the Quarto output folder from <code>_site</code> to <code>docs</code> (edit <code>output-dir</code> in <code>_quarto.yml</code>), then re-render.</li>
+<li><strong>Commit + push</strong>.</li>
+<li>On GitHub.com: <strong>Settings › Pages</strong> → <strong>Source: Deploy from a branch</strong>, <strong>Branch: <code>main</code></strong>, <strong>Folder: <code>/docs</code></strong> → <strong>Save</strong>.</li>
+<li>Wait a minute, then visit the URL GitHub shows at the top of that page.</li>
+</ol>
+<p>Your site’s URL:</p>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+</section>
+</section>
+<section id="practice-3-modes-slash-commands" class="level1">
+<h1>Practice 3: Modes &amp; slash commands</h1>
+<p>Still in your <code>my-website</code> repo:</p>
+<ol type="1">
+<li>Run <code>/init</code> — then <strong>open the <code>CLAUDE.md</code> it wrote and read it.</strong></li>
+<li>Run <code>/model</code> and <code>/effort</code> to see your options.</li>
+<li>Ask for a <strong>small</strong> change (a new page, a navbar tweak) at <code>/effort low</code>.</li>
+<li>Press <strong>shift + tab</strong> into <strong>plan mode</strong>, then ask for something harder — e.g.&nbsp;<em>“collapse everything into a single-page website”</em> — at <code>/effort high</code>. Read the plan before you approve it.</li>
+<li><code>/compact</code>, then keep going. Does it still know what you’re building?</li>
+<li><code>/clear</code>, then ask <em>“what am I working on?”</em></li>
+<li><strong>Commit + push</strong>.</li>
+</ol>
+</section>
+<section id="practice-4-skills" class="level1">
+<h1>Practice 4: Skills</h1>
+<p>A <strong>skill</strong> is a slash command you define that teaches the agent one of your recipes. Today’s class folder ships one: <code>my-chart-style</code>.</p>
+<ol type="1">
+<li>Ask Claude to copy the <code>my-chart-style</code> folder from this class folder into <code>.claude/skills/</code> in your project (create the folder if it doesn’t exist).</li>
+<li>Come up with a chart you’d like to see from <code>data/flights.csv</code>.</li>
+<li>Ask for that chart <strong>without</strong> the skill, then again invoking <strong><code>/my-chart-style</code></strong>.</li>
+<li>Modify the skill — a specific color for all charts, a different theme, whatever — and re-create the chart.</li>
+</ol>
+<p>The data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(<span class="st">'data'</span>, <span class="st">'flights.csv'</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>airlines <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(<span class="st">'data'</span>, <span class="st">'airlines.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Have the agent create a plot <strong>without</strong> the skill here:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write code here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Then have the agent create a plot <strong>with</strong> the <code>/my-chart-style</code> skill here:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write code here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="practice-5-which-airline-should-you-avoid" class="level1">
+<h1>Practice 5: Which airline should you avoid?</h1>
+<p>The code will run, the chart will probably look great. <strong>But the answer may be wrong.</strong></p>
+<p>Ask Claude to rank the airlines by <strong>mean departure delay</strong> — joining <code>flights.csv</code> to <code>airlines.csv</code> for the names — and chart it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>delay_by_airline <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines, <span class="at">by =</span> <span class="st">"carrier"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(carrier, name) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_dep_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_dep_delay))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>delay_by_airline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 16 × 3
+#&gt;    carrier name                        mean_dep_delay
+#&gt;    &lt;chr&gt;   &lt;chr&gt;                                &lt;dbl&gt;
+#&gt;  1 AS      Alaska Airlines Inc.                 21.7 
+#&gt;  2 HA      Hawaiian Airlines Inc.               20.4 
+#&gt;  3 EV      ExpressJet Airlines Inc.             19.9 
+#&gt;  4 9E      Endeavor Air Inc.                    19.7 
+#&gt;  5 YV      Mesa Airlines Inc.                   19.5 
+#&gt;  6 FL      AirTran Airways Corporation          19.1 
+#&gt;  7 WN      Southwest Airlines Co.               17.1 
+#&gt;  8 VX      Virgin America                       15.4 
+#&gt;  9 F9      Frontier Airlines Inc.               15.2 
+#&gt; 10 B6      JetBlue Airways                      14.4 
+#&gt; 11 UA      United Air Lines Inc.                12.6 
+#&gt; 12 DL      Delta Air Lines Inc.                 10.1 
+#&gt; 13 MQ      Envoy Air                             9.81
+#&gt; 14 AA      American Airlines Inc.                7.01
+#&gt; 15 US      US Airways Inc.                       3.83
+#&gt; 16 OO      SkyWest Airlines Inc.               NaN</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>delay_by_airline <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mean_dep_delay, <span class="at">y =</span> <span class="fu">reorder</span>(name, mean_dep_delay))) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#80C5DCFF"</span>, <span class="at">width =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>))) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mean departure delay (minutes)"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mean departure delay varies across airlines"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Cancelled flights are excluded from the mean"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data source: nycflights13 flights and airlines tables"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal_vgrid</span>(<span class="at">font_family =</span> <span class="st">"sans"</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="cn">NA</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="figs/airline-delay-ranking-1.png" class="img-fluid figure-img" width="696"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Which airline does the chart say is worst?</p>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+<section id="now-interrogate-it" class="level2">
+<h2 class="anchored" data-anchor-id="now-interrogate-it">Now interrogate it</h2>
+<p>Don’t ask the agent whether it’s right Check it a way it can’t fake.</p>
+<p><strong>How many flights is each bar calculated from?</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write code here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+<p><strong>What happened to the cancelled flights?</strong> (A cancelled flight has <code>NA</code> for <code>dep_delay</code>.) How many did each airline have, and what share of its flights is that?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write code here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+<p><strong>Is any airline missing from the chart?</strong> Compare the carriers in <code>flights</code> to the carriers in <code>airlines</code>, and to the ones that actually made it into the plot.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write code here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+</section>
+<section id="fix-it" class="level2">
+<h2 class="anchored" data-anchor-id="fix-it">Fix it</h2>
+<p>Tell Claude <em>specifically</em> what’s wrong, and have it fix the chart.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write code here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Does the fixed chart change your answer about which airline to avoid?</p>
+<blockquote class="blockquote">
+<p>Your answer here</p>
+</blockquote>
+</section>
+</section>
+<section id="verification-checklist" class="level1">
+<h1>Verification checklist</h1>
+<p>Run this every time — it’s the skill this whole course is really about.</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Did <strong>row / column counts</strong> change the way I expected?</label></li>
+<li><label><input type="checkbox">Did I <strong>read the code</strong>, not just the summary?</label></li>
+<li><label><input type="checkbox">Did I <strong>spot-check</strong> a few values against the source file?</label></li>
+<li><label><input type="checkbox">Were rows <strong>silently dropped</strong> (<code>NA</code> handling, inner vs.&nbsp;left join)?</label></li>
+<li><label><input type="checkbox">Do <strong>totals / aggregates</strong> make sense?</label></li>
+<li><label><input type="checkbox">Is it <strong>reproducible</strong>, or did it hard-code an answer?</label></li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
