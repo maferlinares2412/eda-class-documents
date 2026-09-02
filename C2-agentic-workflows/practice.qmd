@@ -1,0 +1,197 @@
+---
+title: "Agentic Workflows & GitHub"
+subtitle: "EMSE 4572/6572: Exploratory Data Analysis"
+format: html
+toc: true
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.path = "figs/",
+  fig.width = 7.252,
+  fig.height = 4,
+  comment = "#>",
+  fig.retina = 3
+)
+
+# If you don't have these packages installed, run these lines to do so:
+# install.packages('tidyverse')
+# install.packages('cowplot')
+
+# Load libraries
+library(tidyverse)
+library(cowplot)
+```
+
+# Practice 1: GitHub Desktop
+
+## Checkpoint: your solo loop from HW1
+
+Confirm that:
+
+- Your `eda-practice` repo shows up in **GitHub Desktop**
+- The same repo exists on **GitHub.com**
+
+If any of these fail, flag it now. The steps are in [HW1](https://eda.seas.gwu.edu/2026-Fall/hw/1-agentic-workflows-and-github.html).
+
+## Commit to your partner's repo
+
+Pair up with a neighbor and work through the collaboration loop. You'll both push straight to the `main`branch.
+
+1. In *your* `eda-practice` repo on GitHub.com: **Settings › Collaborators** → add your partner's GitHub username → they accept the emailed invite
+2. Swap repo links. In GitHub Desktop: **File › Clone Repository** → clone *your partner's* repo
+3. Edit their `README.md` in Positron → **Commit** to `main` → **Push**
+4. Back in *your own* repo, click **Fetch origin**, then **Pull**
+5. Open `README.md` — your partner's edit should be there
+
+Write down the URL of your partner's repo, and what you changed in it:
+
+> Your answer here
+
+Look at your repo's **History** in GitHub Desktop. How can you tell which
+commit was your partner's, and what it changed?
+
+> Your answer here
+
+# Practice 2: Your first agentic project
+
+Direct an agent to build a multi-page Quarto website about **someone you
+admire** — a scientist, athlete, artist, whoever.
+
+1. In GitHub Desktop, make a new repo called `my-website` (include a `README`
+   file). Make it **public**, and publish it to GitHub.
+2. In Positron: **File › Open Folder…** and pick that repo's folder.
+3. In the terminal pane, type `claude` and press Enter.
+4. Prompt Claude for a multi-page **Quarto website** about your person.
+5. When it's done, ask it to render the site (if it didn't already).
+6. Open `index.html` in the `_site` folder.
+7. **Commit + push** to GitHub.
+
+## Extra: publish with GitHub Pages
+
+1. Ask Claude to change the Quarto output folder from `_site` to `docs` (edit
+   `output-dir` in `_quarto.yml`), then re-render.
+2. **Commit + push**.
+3. On GitHub.com: **Settings › Pages** → **Source: Deploy from a branch**,
+   **Branch: `main`**, **Folder: `/docs`** → **Save**.
+4. Wait a minute, then visit the URL GitHub shows at the top of that page.
+
+Your site's URL:
+
+> Your answer here
+
+# Practice 3: Modes & slash commands
+
+Still in your `my-website` repo:
+
+1. Run `/init` — then **open the `CLAUDE.md` it wrote and read it.**
+2. Run `/model` and `/effort` to see your options.
+3. Ask for a **small** change (a new page, a navbar tweak) at `/effort low`.
+4. Press **shift + tab** into **plan mode**, then ask for something harder — e.g. *"collapse everything into a single-page website"* — at `/effort high`. Read the plan before you approve it.
+5. `/compact`, then keep going. Does it still know what you're building?
+6. `/clear`, then ask *"what am I working on?"*
+7. **Commit + push**.
+
+# Practice 4: Skills
+
+A **skill** is a slash command you define that teaches the agent one of your recipes. Today's class folder ships one: `my-chart-style`.
+
+1. Ask Claude to copy the `my-chart-style` folder from this class folder into `.claude/skills/` in your project (create the folder if it doesn't exist).
+2. Come up with a chart you'd like to see from `data/flights.csv`.
+3. Ask for that chart **without** the skill, then again invoking **`/my-chart-style`**.
+4. Modify the skill — a specific color for all charts, a different theme, whatever — and re-create the chart.
+
+The data:
+
+```{r}
+flights <- read_csv(file.path('data', 'flights.csv'))
+airlines <- read_csv(file.path('data', 'airlines.csv'))
+```
+
+Have the agent create a plot **without** the skill here:
+
+```{r}
+# Write code here
+```
+
+Then have the agent create a plot **with** the `/my-chart-style` skill here:
+
+```{r}
+# Write code here
+```
+
+# Practice 5: Which airline should you avoid?
+
+The code will run, the chart will probably look great. **But the answer may be wrong.**
+
+Ask Claude to rank the airlines by **mean departure delay** — joining
+`flights.csv` to `airlines.csv` for the names — and chart it.
+
+```{r}
+# Write code here
+```
+
+Which airline does the chart say is worst?
+
+> Your answer here
+
+## Now interrogate it
+
+Don't ask the agent whether it's right Check it a way it can't fake.
+
+**How many flights is each bar calculated from?**
+
+```{r}
+# Write code here
+```
+
+> Your answer here
+
+**What happened to the cancelled flights?** (A cancelled flight has `NA` for `dep_delay`.) How many did each airline have, and what share of its flights is that?
+
+```{r}
+# Write code here
+```
+
+> Your answer here
+
+**Is any airline missing from the chart?** Compare the carriers in `flights` to the carriers in `airlines`, and to the ones that actually made it into the plot.
+
+```{r}
+# Write code here
+```
+
+> Your answer here
+
+## Fix it
+
+Tell Claude *specifically* what's wrong, and have it fix the chart.
+
+```{r}
+#| fig-height: 5
+#| fig-width: 7
+
+# Write code here
+```
+
+Does the fixed chart change your answer about which airline to avoid?
+
+> Your answer here
+
+# Verification checklist
+
+Run this every time — it's the skill this whole course is really about.
+
+- [ ] Did **row / column counts** change the way I expected?
+- [ ] Did I **read the code**, not just the summary?
+- [ ] Did I **spot-check** a few values against the source file?
+- [ ] Were rows **silently dropped** (`NA` handling, inner vs. left join)?
+- [ ] Do **totals / aggregates** make sense?
+- [ ] Is it **reproducible**, or did it hard-code an answer?

@@ -1,0 +1,335 @@
+---
+title: "Agentic Workflows & GitHub"
+subtitle: "EMSE 4572/6572: Exploratory Data Analysis"
+format: html
+toc: true
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.path = "figs/",
+  fig.width = 7.252,
+  fig.height = 4,
+  comment = "#>",
+  fig.retina = 3
+)
+
+# If you don't have these packages installed, run these lines to do so:
+# install.packages('tidyverse')
+# install.packages('cowplot')
+
+# Load libraries
+library(tidyverse)
+library(cowplot)
+```
+
+# Practice 1: GitHub Desktop
+
+## Checkpoint: your solo loop from HW1
+
+Confirm that:
+
+- Your `eda-practice` repo shows up in **GitHub Desktop**
+- The same repo exists on **GitHub.com**
+
+If any of these fail, flag it now. The steps are in [HW1](https://eda.seas.gwu.edu/2026-Fall/hw/1-agentic-workflows-and-github.html).
+
+## Commit to your partner's repo
+
+Pair up with a neighbor and work through the collaboration loop. You'll both push straight to the `main`branch.
+
+1. In *your* `eda-practice` repo on GitHub.com: **Settings › Collaborators** → add your partner's GitHub username → they accept the emailed invite
+2. Swap repo links. In GitHub Desktop: **File › Clone Repository** → clone *your partner's* repo
+3. Edit their `README.md` in Positron → **Commit** to `main` → **Push**
+4. Back in *your own* repo, click **Fetch origin**, then **Pull**
+5. Open `README.md` — your partner's edit should be there
+
+Write down the URL of your partner's repo, and what you changed in it:
+
+> Answers will vary — the repo URL looks like `https://github.com/<partner-username>/eda-practice`, and the change is usually a line added to `README.md`.
+
+Look at your repo's **History** in GitHub Desktop. How can you tell which
+commit was your partner's, and what it changed?
+
+> Answers will vary. Each commit in **History** shows the author's name and avatar next to the message, so your partner's commit is labeled with their GitHub account. Clicking it shows the diff: red lines were removed, green lines were added. The same history is on GitHub.com under the repo's **Commits** link.
+
+# Practice 2: Your first agentic project
+
+Direct an agent to build a multi-page Quarto website about **someone you
+admire** — a scientist, athlete, artist, whoever.
+
+1. In GitHub Desktop, make a new repo called `my-website` (include a `README`
+   file). Make it **public**, and publish it to GitHub.
+2. In Positron: **File › Open Folder…** and pick that repo's folder.
+3. In the terminal pane, type `claude` and press Enter.
+4. Prompt Claude for a multi-page **Quarto website** about your person.
+5. When it's done, ask it to render the site (if it didn't already).
+6. Open `index.html` in the `_site` folder.
+7. **Commit + push** to GitHub.
+
+## Extra: publish with GitHub Pages
+
+1. Ask Claude to change the Quarto output folder from `_site` to `docs` (edit
+   `output-dir` in `_quarto.yml`), then re-render.
+2. **Commit + push**.
+3. On GitHub.com: **Settings › Pages** → **Source: Deploy from a branch**,
+   **Branch: `main`**, **Folder: `/docs`** → **Save**.
+4. Wait a minute, then visit the URL GitHub shows at the top of that page.
+
+Your site's URL:
+
+> Answers will vary — it looks like
+> `https://<your-username>.github.io/my-website/`
+
+# Practice 3: Modes & slash commands
+
+Still in your `my-website` repo:
+
+1. Run `/init` — then **open the `CLAUDE.md` it wrote and read it.**
+2. Run `/model` and `/effort` to see your options.
+3. Ask for a **small** change (a new page, a navbar tweak) at `/effort low`.
+4. Press **shift + tab** into **plan mode**, then ask for something harder — e.g. *"collapse everything into a single-page website"* — at `/effort high`. Read the plan before you approve it.
+5. `/compact`, then keep going. Does it still know what you're building?
+6. `/clear`, then ask *"what am I working on?"*
+7. **Commit + push**.
+
+# Practice 4: Skills
+
+A **skill** is a slash command you define that teaches the agent one of your recipes. Today's class folder ships one: `my-chart-style`.
+
+1. Ask Claude to copy the `my-chart-style` folder from this class folder into `.claude/skills/` in your project (create the folder if it doesn't exist).
+2. Come up with a chart you'd like to see from `data/flights.csv`.
+3. Ask for that chart **without** the skill, then again invoking **`/my-chart-style`**.
+4. Modify the skill — a specific color for all charts, a different theme, whatever — and re-create the chart.
+
+The data:
+
+```{r}
+flights <- read_csv(file.path('data', 'flights.csv'))
+airlines <- read_csv(file.path('data', 'airlines.csv'))
+```
+
+Any chart works here — the point is the *difference* between the two versions, not the chart itself. This solution uses the number of flights per month.
+
+```{r}
+flights_by_month <- flights |>
+  count(month)
+```
+
+Have the agent create a plot **without** the skill here:
+
+```{r}
+#| label: no-skill
+
+ggplot(flights_by_month, aes(x = month, y = n)) +
+  geom_col()
+```
+
+The chart is correct, but it's the ggplot default: gray panel, `n` and `month` as axis titles, no title, no source, and a transparent background if you saved it.
+
+Then have the agent create a plot **with** the `/my-chart-style` skill here:
+
+```{r}
+#| label: with-skill
+
+font <- "sans"
+
+flights_by_month |>
+  ggplot(aes(x = month, y = n)) +
+  geom_col(fill = "#80C5DCFF", width = 0.8) +
+  scale_x_continuous(breaks = seq(1, 12)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(
+    x = NULL,
+    y = "Number of flights",
+    title = "Flights out of NYC are steady across the year",
+    subtitle = "Sample of 10,000 flights departing NYC airports in 2013",
+    caption = "Data source: nycflights13"
+  ) +
+  theme_minimal_hgrid(font_family = font) +
+  theme(
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(hjust = 0, face = "italic"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+```
+
+Same data, same geometry — the skill supplies the conventions you'd otherwise have to restate in every prompt: a cowplot theme with gridlines matched to the plot type (`hgrid` for vertical bars), bars sitting on the axis, a white background, and a full set of labels.
+
+**Step 4** is the part worth doing: open `.claude/skills/my-chart-style/SKILL.md`, change something concrete (say, the bar color to `#E37D39FF`, or the theme to `theme_minimal_grid()`), then ask for the chart again. The new chart should pick up the change with no extra instruction in the prompt. That's the whole idea of a skill: **edit the recipe once, and every future chart follows it.**
+
+# Practice 5: Which airline should you avoid?
+
+The code will run, the chart will probably look great. **But the answer may be wrong.**
+
+Ask Claude to rank the airlines by **mean departure delay** — joining `flights.csv` to `airlines.csv` for the names — and chart it.
+
+This is roughly what you'll get back — it runs, and it looks convincing:
+
+```{r}
+#| label: naive-chart
+
+delay_by_airline <- flights |>
+  left_join(airlines, by = "carrier") |>
+  group_by(name) |>
+  summarize(mean_dep_delay = mean(dep_delay, na.rm = TRUE))
+
+delay_by_airline |>
+  ggplot(aes(x = mean_dep_delay, y = reorder(name, mean_dep_delay))) +
+  geom_col(fill = "#80C5DCFF", width = 0.8) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(
+    x = "Mean departure delay (minutes)",
+    y = NULL,
+    title = "Some airlines leave late more than others",
+    caption = "Data source: nycflights13"
+  ) +
+  theme_minimal_vgrid(font_family = font) +
+  theme(
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(hjust = 0, face = "italic"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+```
+
+Which airline does the chart say is worst?
+
+> **Alaska Airlines**, at about 21.7 minutes of mean departure delay — ahead of Hawaiian (20.4) and ExpressJet (19.9).
+
+## Now interrogate it
+
+Don't ask the agent whether it's right Check it a way it can't fake.
+
+**How many flights is each bar calculated from?**
+
+```{r}
+flights |>
+  left_join(airlines, by = "carrier") |>
+  count(name, sort = TRUE)
+```
+
+> The bars are built from wildly different sample sizes. United has 1,796 flights and ExpressJet 1,606, but **Alaska — the "worst" airline — has only 20**. Hawaiian has 11, Mesa has 10, and SkyWest has **1**. A handful of bad flights moves a 10-flight mean by minutes; it barely moves a 1,800-flight mean at all. The chart draws all 15 bars at the same visual weight, so nothing on it tells you this.
+
+**What happened to the cancelled flights?** (A cancelled flight has `NA` for `dep_delay`.) How many did each airline have, and what share of its flights is that?
+
+```{r}
+cancellations <- flights |>
+  left_join(airlines, by = "carrier") |>
+  group_by(carrier, name) |>
+  summarize(
+    n = n(),
+    n_cancelled = sum(is.na(dep_delay)),
+    pct_cancelled = 100 * n_cancelled / n,
+    .groups = "drop"
+  ) |>
+  arrange(desc(pct_cancelled))
+
+cancellations
+```
+
+> `na.rm = TRUE` silently deletes every cancelled flight before the mean is taken — 279 flights in all. That's not a rounding detail: **Endeavor cancels 7.3%** of its flights and **ExpressJet 6.2%**, and none of those count against them. Getting cancelled is arguably *worse* for you than leaving late, so the metric rewards exactly the wrong behavior. Mesa's rate looks like 20%, but that's 2 of 10 flights — small samples again.
+
+**Is any airline missing from the chart?** Compare the carriers in `flights` to the carriers in `airlines`, and to the ones that actually made it into the plot.
+
+```{r}
+# 16 carriers fly, 16 carriers are named — the join isn't the problem
+n_distinct(flights$carrier)
+nrow(airlines)
+setdiff(flights$carrier, airlines$carrier)
+setdiff(airlines$carrier, flights$carrier)
+
+# ...but only 15 bars get drawn
+delay_by_airline |>
+  filter(is.na(mean_dep_delay) | is.nan(mean_dep_delay))
+```
+
+> **SkyWest is missing.** It flew exactly one flight in this sample, and that flight was cancelled — so every value going into its `mean()` was removed by `na.rm = TRUE`, `mean()` returned `NaN`, and ggplot dropped the bar **without a warning**. An airline that cancelled 100% of its flights vanishes from a chart about which airline to avoid. Note the join itself is fine: all 16 carriers match, so a `left_join()` vs. `inner_join()` mistake isn't what did this.
+
+## Fix it
+
+Tell Claude *specifically* what's wrong, and have it fix the chart.
+
+A useful prompt names the three defects and the remedy: *"Drop carriers with fewer than 100 flights, treat cancellations explicitly instead of `na.rm`-ing them away, and label each bar with its sample size."*
+
+```{r}
+#| label: fixed-chart
+#| fig-height: 5
+#| fig-width: 7
+
+delay_fixed <- flights |>
+  left_join(airlines, by = "carrier") |>
+  group_by(carrier, name) |>
+  summarize(
+    n = n(),
+    n_cancelled = sum(is.na(dep_delay)),
+    pct_cancelled = 100 * n_cancelled / n,
+    mean_dep_delay = mean(dep_delay, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  filter(n >= 100) |>
+  mutate(
+    label = paste0(
+      round(mean_dep_delay, 1),
+      " min  (n = ",
+      n,
+      ", ",
+      round(pct_cancelled, 1),
+      "% cancelled)"
+    )
+  )
+
+delay_fixed |>
+  ggplot(aes(x = mean_dep_delay, y = reorder(name, mean_dep_delay))) +
+  geom_col(fill = "#80C5DCFF", width = 0.8) +
+  geom_text(
+    aes(label = label),
+    family = font,
+    hjust = 0,
+    nudge_x = 0.4,
+    size = 3.5
+  ) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.45))) +
+  labs(
+    x = "Mean departure delay (minutes), cancelled flights excluded",
+    y = NULL,
+    title = "ExpressJet and Endeavor leave late most often",
+    subtitle = "Carriers with at least 100 flights; cancellation rate shown alongside",
+    caption = "Data source: nycflights13"
+  ) +
+  theme_minimal_vgrid(font_family = font) +
+  theme(
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(hjust = 0, face = "italic"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+```
+
+Does the fixed chart change your answer about which airline to avoid?
+
+> **Yes.** Alaska and Hawaiian drop out entirely — their "worst airline" ranking came from 20 and 11 flights. Among carriers with enough flights to say anything, **ExpressJet (19.9 min, 6.2% cancelled)** and **Endeavor (19.7 min, 7.3% cancelled)** are the ones to avoid, and they look even worse once the cancellations are back in view. SkyWest is the honest non-answer: one flight, cancelled — not enough data to rank it either way, which is different from leaving it off the chart silently.
+
+> Note what none of this required: the original code had no bug, no error, and no typo. It was **valid code that answered the wrong question**, and only counting rows, checking `NA`s, and looking for a missing category exposed it.
+
+# Verification checklist
+
+Run this every time — it's the skill this whole course is really about.
+
+- [x] Did **row / column counts** change the way I expected? — 16 carriers in, 15 bars out. That gap was the whole story.
+- [x] Did I **read the code**, not just the summary? — `na.rm = TRUE` is one argument, and it silently deleted 279 flights.
+- [x] Did I **spot-check** a few values against the source file? — Alaska's 21.7-minute mean comes from 20 flights.
+- [x] Were rows **silently dropped** (`NA` handling, inner vs. left join)? — Yes, by `na.rm`, not by the join.
+- [x] Do **totals / aggregates** make sense? — A 20% cancellation rate that is really 2 of 10 flights does not.
+- [x] Is it **reproducible**, or did it hard-code an answer? — Everything above recomputes from the two CSVs.
