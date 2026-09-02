@@ -135,7 +135,38 @@ Ask Claude to rank the airlines by **mean departure delay** — joining
 `flights.csv` to `airlines.csv` for the names — and chart it.
 
 ```{r}
-# Write code here
+#| label: airline-delay-ranking
+
+delay_by_airline <- flights |>
+  left_join(airlines, by = "carrier") |>
+  group_by(carrier, name) |>
+  summarize(
+    mean_dep_delay = mean(dep_delay, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(desc(mean_dep_delay))
+
+delay_by_airline
+
+delay_by_airline |>
+  ggplot(aes(x = mean_dep_delay, y = reorder(name, mean_dep_delay))) +
+  geom_col(fill = "#80C5DCFF", width = 0.8) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(
+    x = "Mean departure delay (minutes)",
+    y = NULL,
+    title = "Mean departure delay varies across airlines",
+    subtitle = "Cancelled flights are excluded from the mean",
+    caption = "Data source: nycflights13 flights and airlines tables"
+  ) +
+  theme_minimal_vgrid(font_family = "sans") +
+  theme(
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(hjust = 0, face = "italic"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
 ```
 
 Which airline does the chart say is worst?
