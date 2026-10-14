@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
     fig.retina = 3
 )
 
-# install.packages("waffle")
+remotes::install_github("hrbrmstr/waffle")
 library(tidyverse)
 library(cowplot)
 library(waffle)
@@ -55,8 +55,43 @@ Use the `wildlife_impacts` data to create the following plot
 #| label: wildlife_phase_of_flight_bars
 #| fig.width: 9
 #| fig.height: 5
+library(tidyverse)
 
-# Write code here
+wildlife_impacts %>%
+  # REMOVE MISSING FLIGHT PHASES
+  filter(!is.na(phase_of_flt)) %>%
+  mutate(
+    # STANDARIZE CATEGORY NAMES
+    phase_of_flt = str_to_title(str_trim(phase_of_flt)),
+    # COMBINE LESS COMMON PHASES
+    phase_of_flt = fct_lump_n(
+      phase_of_flt,
+      n = 4,
+      other_level = "All Other"
+    ),
+    # PUT BARS IN ORDER
+    phase_of_flt = fct_rev(fct_infreq(phase_of_flt))
+  ) %>%
+  # DRAW THE BARS
+  ggplot(aes(y = phase_of_flt)) +
+  geom_bar(fill = "grey35", width = 0.7) +
+  # CONTROL X AXIS + PLACE MARKS AT DESIGNATED #s
+  scale_x_continuous(
+    breaks = seq(0, 20000, by = 5000),
+  ) +
+  # NAMING OF AXES AND TITLE
+  labs(
+    title = "Number of wildlife impacts by phase of flight",
+    x = "Count",
+    y = "Phase of flight"
+  ) +
+  # AESTHETIC CHOICES
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 ```
 
 ## Practice plotting amounts
@@ -67,8 +102,35 @@ Create the following charts:
 #| label: bear_bars
 #| fig.width: 7
 #| fig.height: 5
+library(tidyverse)
 
-# Write code here
+bears %>%
+  mutate(
+    month = fct_inseq(as.factor(month))
+  ) %>%
+  ggplot(aes(x = month, fill = month == "8")) +
+  geom_bar(width = 0.7) +
+  scale_fill_manual(
+    values = c("FALSE" = "grey75", "TRUE" = "orangered"),
+    guide = "none"
+  ) +
+  scale_y_continuous(
+    breaks = seq(0, 30, by = 10),
+    limits = c(0, 30),
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  labs(
+    title = "Number of bear killings in each month",
+    subtitle = "August is the deadliest month",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 ```
 
 ```{r}
@@ -76,7 +138,33 @@ Create the following charts:
 #| fig.width: 7
 #| fig.height: 4
 
-# Write code here
+milk_production %>%
+  filter(year == 2017) %>%
+  slice_max(
+    order_by = milk_produced,
+    n = 10,
+    with_ties = FALSE
+  ) %>%
+  mutate(
+    milk_billions = milk_produced / 1e9,
+    state = fct_reorder(state, milk_billions)
+  ) %>%
+  ggplot(aes(x = milk_billions, y = state)) +
+  geom_point(color = "steelblue", size = 3) +
+  scale_x_continuous(
+    breaks = seq(10, 40, by = 10)
+  ) +
+  labs(
+    title = "Top 10 milk producing states in 2017",
+    x = "Milk produced (billions lbs)",
+    y = "State"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 ```
 
 ## Your turn - practice plotting proportions
