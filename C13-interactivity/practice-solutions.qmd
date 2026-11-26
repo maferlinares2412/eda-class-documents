@@ -1,0 +1,92 @@
+---
+title: "Interactivity (solutions)"
+subtitle: "EMSE 4572 / 6572: Exploratory Data Analysis"
+format: html
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(
+    warning = FALSE,
+    message = FALSE,
+    fig.path = "figs/",
+    fig.width = 7.252,
+    fig.height = 4,
+    comment = "#>",
+    fig.retina = 3
+)
+
+library(tidyverse)
+library(plotly)
+library(reactable)
+
+gapminder <- read_csv(file.path("data", "gapminder.csv"))
+```
+
+# 1. JavaScript Graphics (A): Packages
+
+### `ggplotly()`
+
+```{r}
+plot <- gapminder %>%
+  filter(year == 2007) %>%
+  ggplot(
+    aes(
+      x = gdpPercap,
+      y = lifeExp,
+      size = pop,
+      color = continent,
+      label = country
+    )
+  ) +
+  geom_point(alpha = 0.7) +
+  scale_x_log10(labels = scales::label_dollar()) +
+  scale_size_area(guide = "none", max_size = 15) +
+  theme_bw(base_size = 14) +
+  labs(
+    x = "GDP per capita (log scale)",
+    y = "Life expectancy (years)",
+    color = "Continent"
+  )
+
+# Show only the variables that matter in the tooltip
+ggplotly(plot, tooltip = c("label", "x", "y"))
+```
+
+### `reactable()`
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  reactable(
+    searchable = TRUE,
+    highlight = TRUE,
+    filterable = TRUE,
+    defaultPageSize = 5,
+    showPageSizeOptions = TRUE,
+    pageSizeOptions = c(5, 10, 15)
+  )
+```
+
+# 2. JavaScript Graphics (B): D3 + Claude
+
+One possible result: the static chart above, brought to life as an animated D3 chart with a year slider, a play button, and continent filters. The code (including the data) is in `d3/gapminder-slider.html`.
+
+<iframe src="d3/gapminder-slider.html" width="100%" height="650" style="border:none;"></iframe>
+
+To verify it against the data, set the slider to 2007 and compare a bubble to the data:
+
+```{r}
+gapminder %>%
+  filter(country == "China", year == 2007)
+
+gapminder %>%
+  filter(year == 2007) %>%
+  nrow()
+```
+
+# 3. Shiny
+
+Solutions for the Shiny exercises are in `caseConverter_solution.R` and `internetUsers_solution.R`.

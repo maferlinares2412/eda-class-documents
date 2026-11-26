@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life expectancy vs. income, 2007</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; padding: 8px; }
+  #chart { max-width: 900px; margin: 0 auto; position: relative; }
+  svg { width: 100%; height: auto; display: block; }
+  .tooltip {
+    position: absolute; pointer-events: none; opacity: 0;
+    background: white; border: 1px solid #999; border-radius: 4px;
+    padding: 6px 8px; font-size: 13px; line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+
+<script>
+// 1. DATA: one row per country, embedded right in the file
+const data = [{"country":"Afghanistan","continent":"Asia","year":2007,"lifeExp":43.828,"pop":31889923,"gdpPercap":974.6},{"country":"Albania","continent":"Europe","year":2007,"lifeExp":76.423,"pop":3600523,"gdpPercap":5937},{"country":"Algeria","continent":"Africa","year":2007,"lifeExp":72.301,"pop":33333216,"gdpPercap":6223.4},{"country":"Angola","continent":"Africa","year":2007,"lifeExp":42.731,"pop":12420476,"gdpPercap":4797.2},{"country":"Argentina","continent":"Americas","year":2007,"lifeExp":75.32,"pop":40301927,"gdpPercap":12779.4},{"country":"Australia","continent":"Oceania","year":2007,"lifeExp":81.235,"pop":20434176,"gdpPercap":34435.4},{"country":"Austria","continent":"Europe","year":2007,"lifeExp":79.829,"pop":8199783,"gdpPercap":36126.5},{"country":"Bahrain","continent":"Asia","year":2007,"lifeExp":75.635,"pop":708573,"gdpPercap":29796},{"country":"Bangladesh","continent":"Asia","year":2007,"lifeExp":64.062,"pop":150448339,"gdpPercap":1391.3},{"country":"Belgium","continent":"Europe","year":2007,"lifeExp":79.441,"pop":10392226,"gdpPercap":33692.6},{"country":"Benin","continent":"Africa","year":2007,"lifeExp":56.728,"pop":8078314,"gdpPercap":1441.3},{"country":"Bolivia","continent":"Americas","year":2007,"lifeExp":65.554,"pop":9119152,"gdpPercap":3822.1},{"country":"Bosnia and Herzegovina","continent":"Europe","year":2007,"lifeExp":74.852,"pop":4552198,"gdpPercap":7446.3},{"country":"Botswana","continent":"Africa","year":2007,"lifeExp":50.728,"pop":1639131,"gdpPercap":12569.9},{"country":"Brazil","continent":"Americas","year":2007,"lifeExp":72.39,"pop":190010647,"gdpPercap":9065.8},{"country":"Bulgaria","continent":"Europe","year":2007,"lifeExp":73.005,"pop":7322858,"gdpPercap":10680.8},{"country":"Burkina Faso","continent":"Africa","year":2007,"lifeExp":52.295,"pop":14326203,"gdpPercap":1217},{"country":"Burundi","continent":"Africa","year":2007,"lifeExp":49.58,"pop":8390505,"gdpPercap":430.1},{"country":"Cambodia","continent":"Asia","year":2007,"lifeExp":59.723,"pop":14131858,"gdpPercap":1713.8},{"country":"Cameroon","continent":"Africa","year":2007,"lifeExp":50.43,"pop":17696293,"gdpPercap":2042.1},{"country":"Canada","continent":"Americas","year":2007,"lifeExp":80.653,"pop":33390141,"gdpPercap":36319.2},{"country":"Central African Republic","continent":"Africa","year":2007,"lifeExp":44.741,"pop":4369038,"gdpPercap":706},{"country":"Chad","continent":"Africa","year":2007,"lifeExp":50.651,"pop":10238807,"gdpPercap":1704.1},{"country":"Chile","continent":"Americas","year":2007,"lifeExp":78.553,"pop":16284741,"gdpPercap":13171.6},{"country":"China","continent":"Asia","year":2007,"lifeExp":72.961,"pop":1318683096,"gdpPercap":4959.1},{"country":"Colombia","continent":"Americas","year":2007,"lifeExp":72.889,"pop":44227550,"gdpPercap":7006.6},{"country":"Comoros","continent":"Africa","year":2007,"lifeExp":65.152,"pop":710960,"gdpPercap":986.1},{"country":"Congo, Dem. Rep.","continent":"Africa","year":2007,"lifeExp":46.462,"pop":64606759,"gdpPercap":277.6},{"country":"Congo, Rep.","continent":"Africa","year":2007,"lifeExp":55.322,"pop":3800610,"gdpPercap":3632.6},{"country":"Costa Rica","continent":"Americas","year":2007,"lifeExp":78.782,"pop":4133884,"gdpPercap":9645.1},{"country":"Cote d'Ivoire","continent":"Africa","year":2007,"lifeExp":48.328,"pop":18013409,"gdpPercap":1544.8},{"country":"Croatia","continent":"Europe","year":2007,"lifeExp":75.748,"pop":4493312,"gdpPercap":14619.2},{"country":"Cuba","continent":"Americas","year":2007,"lifeExp":78.273,"pop":11416987,"gdpPercap":8948.1},{"country":"Czech Republic","continent":"Europe","year":2007,"lifeExp":76.486,"pop":10228744,"gdpPercap":22833.3},{"country":"Denmark","continent":"Europe","year":2007,"lifeExp":78.332,"pop":5468120,"gdpPercap":35278.4},{"country":"Djibouti","continent":"Africa","year":2007,"lifeExp":54.791,"pop":496374,"gdpPercap":2082.5},{"country":"Dominican Republic","continent":"Americas","year":2007,"lifeExp":72.235,"pop":9319622,"gdpPercap":6025.4},{"country":"Ecuador","continent":"Americas","year":2007,"lifeExp":74.994,"pop":13755680,"gdpPercap":6873.3},{"country":"Egypt","continent":"Africa","year":2007,"lifeExp":71.338,"pop":80264543,"gdpPercap":5581.2},{"country":"El Salvador","continent":"Americas","year":2007,"lifeExp":71.878,"pop":6939688,"gdpPercap":5728.4},{"country":"Equatorial Guinea","continent":"Africa","year":2007,"lifeExp":51.579,"pop":551201,"gdpPercap":12154.1},{"country":"Eritrea","continent":"Africa","year":2007,"lifeExp":58.04,"pop":4906585,"gdpPercap":641.4},{"country":"Ethiopia","continent":"Africa","year":2007,"lifeExp":52.947,"pop":76511887,"gdpPercap":690.8},{"country":"Finland","continent":"Europe","year":2007,"lifeExp":79.313,"pop":5238460,"gdpPercap":33207.1},{"country":"France","continent":"Europe","year":2007,"lifeExp":80.657,"pop":61083916,"gdpPercap":30470},{"country":"Gabon","continent":"Africa","year":2007,"lifeExp":56.735,"pop":1454867,"gdpPercap":13206.5},{"country":"Gambia","continent":"Africa","year":2007,"lifeExp":59.448,"pop":1688359,"gdpPercap":752.7},{"country":"Germany","continent":"Europe","year":2007,"lifeExp":79.406,"pop":82400996,"gdpPercap":32170.4},{"country":"Ghana","continent":"Africa","year":2007,"lifeExp":60.022,"pop":22873338,"gdpPercap":1327.6},{"country":"Greece","continent":"Europe","year":2007,"lifeExp":79.483,"pop":10706290,"gdpPercap":27538.4},{"country":"Guatemala","continent":"Americas","year":2007,"lifeExp":70.259,"pop":12572928,"gdpPercap":5186.1},{"country":"Guinea","continent":"Africa","year":2007,"lifeExp":56.007,"pop":9947814,"gdpPercap":942.7},{"country":"Guinea-Bissau","continent":"Africa","year":2007,"lifeExp":46.388,"pop":1472041,"gdpPercap":579.2},{"country":"Haiti","continent":"Americas","year":2007,"lifeExp":60.916,"pop":8502814,"gdpPercap":1201.6},{"country":"Honduras","continent":"Americas","year":2007,"lifeExp":70.198,"pop":7483763,"gdpPercap":3548.3},{"country":"Hong Kong, China","continent":"Asia","year":2007,"lifeExp":82.208,"pop":6980412,"gdpPercap":39725},{"country":"Hungary","continent":"Europe","year":2007,"lifeExp":73.338,"pop":9956108,"gdpPercap":18008.9},{"country":"Iceland","continent":"Europe","year":2007,"lifeExp":81.757,"pop":301931,"gdpPercap":36180.8},{"country":"India","continent":"Asia","year":2007,"lifeExp":64.698,"pop":1110396331,"gdpPercap":2452.2},{"country":"Indonesia","continent":"Asia","year":2007,"lifeExp":70.65,"pop":223547000,"gdpPercap":3540.7},{"country":"Iran","continent":"Asia","year":2007,"lifeExp":70.964,"pop":69453570,"gdpPercap":11605.7},{"country":"Iraq","continent":"Asia","year":2007,"lifeExp":59.545,"pop":27499638,"gdpPercap":4471.1},{"country":"Ireland","continent":"Europe","year":2007,"lifeExp":78.885,"pop":4109086,"gdpPercap":40676},{"country":"Israel","continent":"Asia","year":2007,"lifeExp":80.745,"pop":6426679,"gdpPercap":25523.3},{"country":"Italy","continent":"Europe","year":2007,"lifeExp":80.546,"pop":58147733,"gdpPercap":28569.7},{"country":"Jamaica","continent":"Americas","year":2007,"lifeExp":72.567,"pop":2780132,"gdpPercap":7320.9},{"country":"Japan","continent":"Asia","year":2007,"lifeExp":82.603,"pop":127467972,"gdpPercap":31656.1},{"country":"Jordan","continent":"Asia","year":2007,"lifeExp":72.535,"pop":6053193,"gdpPercap":4519.5},{"country":"Kenya","continent":"Africa","year":2007,"lifeExp":54.11,"pop":35610177,"gdpPercap":1463.2},{"country":"Korea, Dem. Rep.","continent":"Asia","year":2007,"lifeExp":67.297,"pop":23301725,"gdpPercap":1593.1},{"country":"Korea, Rep.","continent":"Asia","year":2007,"lifeExp":78.623,"pop":49044790,"gdpPercap":23348.1},{"country":"Kuwait","continent":"Asia","year":2007,"lifeExp":77.588,"pop":2505559,"gdpPercap":47307},{"country":"Lebanon","continent":"Asia","year":2007,"lifeExp":71.993,"pop":3921278,"gdpPercap":10461.1},{"country":"Lesotho","continent":"Africa","year":2007,"lifeExp":42.592,"pop":2012649,"gdpPercap":1569.3},{"country":"Liberia","continent":"Africa","year":2007,"lifeExp":45.678,"pop":3193942,"gdpPercap":414.5},{"country":"Libya","continent":"Africa","year":2007,"lifeExp":73.952,"pop":6036914,"gdpPercap":12057.5},{"country":"Madagascar","continent":"Africa","year":2007,"lifeExp":59.443,"pop":19167654,"gdpPercap":1044.8},{"country":"Malawi","continent":"Africa","year":2007,"lifeExp":48.303,"pop":13327079,"gdpPercap":759.3},{"country":"Malaysia","continent":"Asia","year":2007,"lifeExp":74.241,"pop":24821286,"gdpPercap":12451.7},{"country":"Mali","continent":"Africa","year":2007,"lifeExp":54.467,"pop":12031795,"gdpPercap":1042.6},{"country":"Mauritania","continent":"Africa","year":2007,"lifeExp":64.164,"pop":3270065,"gdpPercap":1803.2},{"country":"Mauritius","continent":"Africa","year":2007,"lifeExp":72.801,"pop":1250882,"gdpPercap":10957},{"country":"Mexico","continent":"Americas","year":2007,"lifeExp":76.195,"pop":108700891,"gdpPercap":11977.6},{"country":"Mongolia","continent":"Asia","year":2007,"lifeExp":66.803,"pop":2874127,"gdpPercap":3095.8},{"country":"Montenegro","continent":"Europe","year":2007,"lifeExp":74.543,"pop":684736,"gdpPercap":9253.9},{"country":"Morocco","continent":"Africa","year":2007,"lifeExp":71.164,"pop":33757175,"gdpPercap":3820.2},{"country":"Mozambique","continent":"Africa","year":2007,"lifeExp":42.082,"pop":19951656,"gdpPercap":823.7},{"country":"Myanmar","continent":"Asia","year":2007,"lifeExp":62.069,"pop":47761980,"gdpPercap":944},{"country":"Namibia","continent":"Africa","year":2007,"lifeExp":52.906,"pop":2055080,"gdpPercap":4811.1},{"country":"Nepal","continent":"Asia","year":2007,"lifeExp":63.785,"pop":28901790,"gdpPercap":1091.4},{"country":"Netherlands","continent":"Europe","year":2007,"lifeExp":79.762,"pop":16570613,"gdpPercap":36797.9},{"country":"New Zealand","continent":"Oceania","year":2007,"lifeExp":80.204,"pop":4115771,"gdpPercap":25185},{"country":"Nicaragua","continent":"Americas","year":2007,"lifeExp":72.899,"pop":5675356,"gdpPercap":2749.3},{"country":"Niger","continent":"Africa","year":2007,"lifeExp":56.867,"pop":12894865,"gdpPercap":619.7},{"country":"Nigeria","continent":"Africa","year":2007,"lifeExp":46.859,"pop":135031164,"gdpPercap":2014},{"country":"Norway","continent":"Europe","year":2007,"lifeExp":80.196,"pop":4627926,"gdpPercap":49357.2},{"country":"Oman","continent":"Asia","year":2007,"lifeExp":75.64,"pop":3204897,"gdpPercap":22316.2},{"country":"Pakistan","continent":"Asia","year":2007,"lifeExp":65.483,"pop":169270617,"gdpPercap":2605.9},{"country":"Panama","continent":"Americas","year":2007,"lifeExp":75.537,"pop":3242173,"gdpPercap":9809.2},{"country":"Paraguay","continent":"Americas","year":2007,"lifeExp":71.752,"pop":6667147,"gdpPercap":4172.8},{"country":"Peru","continent":"Americas","year":2007,"lifeExp":71.421,"pop":28674757,"gdpPercap":7408.9},{"country":"Philippines","continent":"Asia","year":2007,"lifeExp":71.688,"pop":91077287,"gdpPercap":3190.5},{"country":"Poland","continent":"Europe","year":2007,"lifeExp":75.563,"pop":38518241,"gdpPercap":15389.9},{"country":"Portugal","continent":"Europe","year":2007,"lifeExp":78.098,"pop":10642836,"gdpPercap":20509.6},{"country":"Puerto Rico","continent":"Americas","year":2007,"lifeExp":78.746,"pop":3942491,"gdpPercap":19328.7},{"country":"Reunion","continent":"Africa","year":2007,"lifeExp":76.442,"pop":798094,"gdpPercap":7670.1},{"country":"Romania","continent":"Europe","year":2007,"lifeExp":72.476,"pop":22276056,"gdpPercap":10808.5},{"country":"Rwanda","continent":"Africa","year":2007,"lifeExp":46.242,"pop":8860588,"gdpPercap":863.1},{"country":"Sao Tome and Principe","continent":"Africa","year":2007,"lifeExp":65.528,"pop":199579,"gdpPercap":1598.4},{"country":"Saudi Arabia","continent":"Asia","year":2007,"lifeExp":72.777,"pop":27601038,"gdpPercap":21654.8},{"country":"Senegal","continent":"Africa","year":2007,"lifeExp":63.062,"pop":12267493,"gdpPercap":1712.5},{"country":"Serbia","continent":"Europe","year":2007,"lifeExp":74.002,"pop":10150265,"gdpPercap":9786.5},{"country":"Sierra Leone","continent":"Africa","year":2007,"lifeExp":42.568,"pop":6144562,"gdpPercap":862.5},{"country":"Singapore","continent":"Asia","year":2007,"lifeExp":79.972,"pop":4553009,"gdpPercap":47143.2},{"country":"Slovak Republic","continent":"Europe","year":2007,"lifeExp":74.663,"pop":5447502,"gdpPercap":18678.3},{"country":"Slovenia","continent":"Europe","year":2007,"lifeExp":77.926,"pop":2009245,"gdpPercap":25768.3},{"country":"Somalia","continent":"Africa","year":2007,"lifeExp":48.159,"pop":9118773,"gdpPercap":926.1},{"country":"South Africa","continent":"Africa","year":2007,"lifeExp":49.339,"pop":43997828,"gdpPercap":9269.7},{"country":"Spain","continent":"Europe","year":2007,"lifeExp":80.941,"pop":40448191,"gdpPercap":28821.1},{"country":"Sri Lanka","continent":"Asia","year":2007,"lifeExp":72.396,"pop":20378239,"gdpPercap":3970.1},{"country":"Sudan","continent":"Africa","year":2007,"lifeExp":58.556,"pop":42292929,"gdpPercap":2602.4},{"country":"Swaziland","continent":"Africa","year":2007,"lifeExp":39.613,"pop":1133066,"gdpPercap":4513.5},{"country":"Sweden","continent":"Europe","year":2007,"lifeExp":80.884,"pop":9031088,"gdpPercap":33859.7},{"country":"Switzerland","continent":"Europe","year":2007,"lifeExp":81.701,"pop":7554661,"gdpPercap":37506.4},{"country":"Syria","continent":"Asia","year":2007,"lifeExp":74.143,"pop":19314747,"gdpPercap":4184.5},{"country":"Taiwan","continent":"Asia","year":2007,"lifeExp":78.4,"pop":23174294,"gdpPercap":28718.3},{"country":"Tanzania","continent":"Africa","year":2007,"lifeExp":52.517,"pop":38139640,"gdpPercap":1107.5},{"country":"Thailand","continent":"Asia","year":2007,"lifeExp":70.616,"pop":65068149,"gdpPercap":7458.4},{"country":"Togo","continent":"Africa","year":2007,"lifeExp":58.42,"pop":5701579,"gdpPercap":883},{"country":"Trinidad and Tobago","continent":"Americas","year":2007,"lifeExp":69.819,"pop":1056608,"gdpPercap":18008.5},{"country":"Tunisia","continent":"Africa","year":2007,"lifeExp":73.923,"pop":10276158,"gdpPercap":7092.9},{"country":"Turkey","continent":"Europe","year":2007,"lifeExp":71.777,"pop":71158647,"gdpPercap":8458.3},{"country":"Uganda","continent":"Africa","year":2007,"lifeExp":51.542,"pop":29170398,"gdpPercap":1056.4},{"country":"United Kingdom","continent":"Europe","year":2007,"lifeExp":79.425,"pop":60776238,"gdpPercap":33203.3},{"country":"United States","continent":"Americas","year":2007,"lifeExp":78.242,"pop":301139947,"gdpPercap":42951.7},{"country":"Uruguay","continent":"Americas","year":2007,"lifeExp":76.384,"pop":3447496,"gdpPercap":10611.5},{"country":"Venezuela","continent":"Americas","year":2007,"lifeExp":73.747,"pop":26084662,"gdpPercap":11415.8},{"country":"Vietnam","continent":"Asia","year":2007,"lifeExp":74.249,"pop":85262356,"gdpPercap":2441.6},{"country":"West Bank and Gaza","continent":"Asia","year":2007,"lifeExp":73.422,"pop":4018332,"gdpPercap":3025.3},{"country":"Yemen, Rep.","continent":"Asia","year":2007,"lifeExp":62.698,"pop":22211743,"gdpPercap":2280.8},{"country":"Zambia","continent":"Africa","year":2007,"lifeExp":42.384,"pop":11746035,"gdpPercap":1271.2},{"country":"Zimbabwe","continent":"Africa","year":2007,"lifeExp":43.487,"pop":12311143,"gdpPercap":469.7}];
+
+// Draw big countries first so small ones aren't hidden underneath
+data.sort((a, b) => b.pop - a.pop);
+
+// 2. SCALES: map data values to pixel positions
+const width = 900, height = 560;
+const margin = {top: 70, right: 30, bottom: 60, left: 70};
+
+const x = d3.scaleLog()
+  .domain([200, 60000])
+  .range([margin.left, width - margin.right]);
+
+const y = d3.scaleLinear()
+  .domain([40, 85])
+  .range([height - margin.bottom, margin.top]);
+
+const r = d3.scaleSqrt()
+  .domain([0, d3.max(data, d => d.pop)])
+  .range([0, 26]);
+
+const color = d3.scaleOrdinal()
+  .domain(["Africa", "Americas", "Asia", "Europe", "Oceania"])
+  .range(["#E69F00", "#56B4E9", "#009E73", "#CC79A7", "#0072B2"]);
+
+// 3. SVG + AXES
+const svg = d3.select("#chart").append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`);
+
+svg.append("g")
+  .attr("transform", `translate(0,${height - margin.bottom})`)
+  .call(d3.axisBottom(x)
+    .tickValues([500, 1000, 2000, 5000, 10000, 20000, 50000])
+    .tickFormat(d3.format("$,")));
+
+svg.append("g")
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y));
+
+svg.append("text")
+  .attr("x", width / 2).attr("y", height - 15)
+  .attr("text-anchor", "middle")
+  .text("GDP per capita (log scale)");
+
+svg.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("x", -height / 2).attr("y", 20)
+  .attr("text-anchor", "middle")
+  .text("Life expectancy (years)");
+
+svg.append("text")
+  .attr("x", margin.left).attr("y", 32)
+  .attr("font-size", 22).attr("font-weight", "bold")
+  .text("Richer countries live longer, but income isn't everything");
+
+svg.append("text")
+  .attr("x", margin.left).attr("y", 54)
+  .attr("fill", "#555")
+  .text("2007. Each bubble is a country; bubble area is population.");
+
+// Legend for the color scale
+const legend = svg.append("g")
+  .attr("transform", `translate(${width - margin.right - 110},${height - margin.bottom - 100})`);
+color.domain().forEach((continent, i) => {
+  legend.append("circle")
+    .attr("cx", 0).attr("cy", i * 18).attr("r", 6).attr("fill", color(continent));
+  legend.append("text")
+    .attr("x", 12).attr("y", i * 18 + 4).attr("font-size", 13).text(continent);
+});
+
+// 4. MARKS: one circle per row of data
+const tooltip = d3.select("#chart").append("div").attr("class", "tooltip");
+
+svg.append("g").selectAll("circle")
+  .data(data)
+  .join("circle")
+    .attr("cx", d => x(d.gdpPercap))
+    .attr("cy", d => y(d.lifeExp))
+    .attr("r", d => r(d.pop))
+    .attr("fill", d => color(d.continent))
+    .attr("fill-opacity", 0.75)
+    .attr("stroke", "white")
+    // 5. INTERACTION: show a tooltip on hover
+    .on("mousemove", (event, d) => {
+      const [mx, my] = d3.pointer(event, document.querySelector("#chart"));
+      tooltip
+        .style("opacity", 1)
+        .style("left", (mx + 12) + "px")
+        .style("top", (my + 12) + "px")
+        .html(`<b>${d.country}</b><br>
+               Life expectancy: ${d.lifeExp.toFixed(1)} years<br>
+               GDP per capita: $${d3.format(",.0f")(d.gdpPercap)}<br>
+               Population: ${d3.format(".3s")(d.pop)}`);
+    })
+    .on("mouseleave", () => tooltip.style("opacity", 0));
+</script>
+</body>
+</html>

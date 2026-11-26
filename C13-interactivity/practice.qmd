@@ -1,0 +1,212 @@
+---
+title: "Interactivity"
+subtitle: "EMSE 4572 / 6572: Exploratory Data Analysis"
+format: html
+theme: lux
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(
+    warning = FALSE,
+    message = FALSE,
+    fig.path = "figs/",
+    fig.width = 7.252,
+    fig.height = 4,
+    comment = "#>",
+    fig.retina = 3
+)
+
+# Use these commands to install them if you have not already
+# install.packages('plotly')
+# install.packages('reactable')
+# install.packages('shiny')
+# install.packages('shinyWidgets')
+# install.packages('rsconnect')
+
+library(tidyverse)
+library(plotly)
+library(reactable)
+
+gapminder <- read_csv(file.path("data", "gapminder.csv"))
+```
+
+# 1. JavaScript Graphics (A): Packages
+
+Pick **one**:
+
+- Take a chart from a past class or homework and make it interactive with `ggplotly()`
+- Make an interactive table of the `gapminder` data with `reactable()`
+
+Then check it:
+
+- Do the tooltips show the right variables, in sensible units?
+- Did anything from the static version get lost (title, caption, annotations)?
+- Is the interactive version actually better?
+
+# Codex work here
+```{r}
+#| label: gapminder-population-map
+
+library(plotly)
+
+font <- "serif"
+plotColors <- c(low = "#9ECAE1", mid = "#4292C6", high = "#084594")
+chart_height <- 520
+
+# Use one observation per country: the latest year in the supplied data.
+map_year <- max(gapminder$year, na.rm = TRUE)
+map_data <- gapminder |>
+  filter(year == map_year) |>
+  mutate(
+    population_color = log10(pop),
+    hover_label = paste0(
+      "<b>", country, "</b>",
+      "<br>Continent: ", continent,
+      "<br>Population: ", scales::comma(pop)
+    )
+  )
+
+# A logarithmic color scale keeps smaller populations distinguishable.
+population_breaks <- 10^seq(
+  ceiling(min(map_data$population_color)),
+  floor(max(map_data$population_color))
+)
+chart_title <- paste("Country populations in", map_year)
+chart_caption <- paste0(
+  "Source: data/gapminder.csv · ", nrow(map_data), " countries represented.",
+  "<br>Darker countries have larger populations; gray indicates no data. Hover for details."
+)
+
+plot_ly(
+  data = map_data,
+  height = chart_height,
+  type = "choropleth",
+  locations = ~country,
+  locationmode = "country names",
+  text = ~hover_label,
+  hoverinfo = "text",
+  z = ~population_color,
+  marker = list(line = list(color = "white", width = 0.5)),
+    colorscale = list(list(0, plotColors[["low"]]),
+                      list(0.5, plotColors[["mid"]]),
+                      list(1, plotColors[["high"]])),
+    zmin = min(map_data$population_color),
+    zmax = max(map_data$population_color),
+    showscale = TRUE,
+    colorbar = list(
+      title = list(text = "Population<br>(log scale)"),
+      tickvals = log10(population_breaks),
+      ticktext = scales::label_number(scale_cut = scales::cut_short_scale())(population_breaks),
+      thickness = 14,
+      len = 0.7,
+      outlinewidth = 0
+    )
+) |>
+  layout(
+    title = list(text = chart_title, x = 0, xanchor = "left"),
+    font = list(family = font, size = 14, color = "#243447"),
+    paper_bgcolor = "white",
+    plot_bgcolor = "white",
+    hoverlabel = list(bgcolor = "white", font = list(family = font, size = 14)),
+    geo = list(
+      projection = list(type = "natural earth"),
+      showframe = FALSE,
+      showland = TRUE,
+      landcolor = "#D9D9D9",
+      showcountries = TRUE,
+      countrycolor = "#FFFFFF",
+      showcoastlines = TRUE,
+      coastlinecolor = "#BCC5CC",
+      bgcolor = "white"
+    ),
+    annotations = list(list(
+      text = chart_caption,
+      x = 0, y = -0.04, xref = "paper", yref = "paper",
+      xanchor = "left", yanchor = "top", showarrow = FALSE,
+      align = "left", font = list(size = 11, color = "#52606D")
+    )),
+    margin = list(l = 10, r = 20, t = 60, b = 75)
+  )
+
+```
+
+# 2. JavaScript Graphics (B): D3 + Claude
+
+You won't write D3 by hand. You will **prompt Claude and iterate**, then **verify the result against a static chart and the data**.
+
+### Make a static chart first
+
+Make a static chart (any data set) and check it carefully. Know what the data should look like, so you can tell when the interactive version is wrong.
+
+```{r}
+# Write your static chart code here
+```
+
+### Sketch the interactive version
+
+On paper, decide:
+
+- What moves, and what does each control (slider, dropdown, button) change?
+- What does hover show?
+- What one sentence should the title say?
+
+If you're not sure where to start, try the example from class: a bubble chart of the `gapminder` data (life expectancy vs. GDP per capita, sized by population, colored by continent) with a **year slider** and a **play button** that animates between years.
+
+### Direct Claude
+
+Give Claude your static chart code and your data, then use a prompt like this (edit it to fit your chart):
+
+> Here is my static chart (code below) and my data. Build an animated, interactive version in D3: [describe your interaction]. Add a tooltip, labeled axes, and a title that states the main takeaway. Put it in a single self-contained file called `d3-chart.html` in this folder, loading D3 from a CDN. **Embed the data directly in the file** (don't load it from a separate file).
+
+Open `d3-chart.html` in your browser, and keep going back and forth with Claude until you like it.
+
+### Verify it
+
+- **Compare to the static chart.** Does the interactive chart match it?
+- **The numbers.** Hover over several points and compare the values to your data
+- **The axes.** Are they labeled, with units? Resize your browser window: does the chart still work?
+- **The claim.** Does the data support exactly what the title says?
+- **The interaction.** Click everything. What happens at the first and last year?
+- Open your browser's console (right-click → Inspect → Console). Any red errors?
+
+### Embed it
+
+Make sure `d3-chart.html` is in the same folder as this file, then embed it:
+
+```html
+<iframe src="d3-chart.html" width="100%" height="500" style="border:none;"></iframe>
+```
+
+If you're curious what D3 looks like, `d3/scatter.html` is a small example you can open in Positron.
+
+# 3. Shiny
+
+### hello_shiny
+
+Create a new file called `app.R` in Positron, then copy in the code from the `hello_shiny` slide and run it.
+
+### Quick practice
+
+Open the `widgets.R` file and run the app. Then look at the [Shiny Widgets Gallery](https://shiny.rstudio.com/gallery/widget-gallery.html) to see other input widgets.
+
+### Your Turn: caseConverter
+
+1. Open the `caseConverter.R` file
+2. In the `server`: write code in the provided `renderText()` to convert the input text to lower case
+3. Run the app and test that it's working
+4. In the `ui` main panel: add two more `textOutput()` functions for displaying the input text in "upper" case and "title" case
+5. In the `server`: define two more outputs to convert the input text to "upper" case and "title" case
+
+### Extras
+
+- Open `mpg.R` and `shinyWidgets.R`, and run the apps
+- Add a theme with the [shinythemes](https://rstudio.github.io/shinythemes/) package
+
+### Your Turn: internetUsers
+
+1. Open the `internetUsers.R` file
+2. Modify the server code so that the inputs control the plot
+3. Optional: deploy your app to [Posit Connect Cloud](https://connect.posit.cloud). Put the app (renamed `app.R`) and its `data` folder in a public GitHub repo, run `rsconnect::writeManifest()` in that folder, push, then publish from Connect Cloud
